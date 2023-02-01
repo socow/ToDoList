@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Login from "../components/Login";
+
 function LoginPage() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate(`/todo`);
+    }
+  }, [navigate]);
+
   return (
     <LoginWrap>
       <Login />
