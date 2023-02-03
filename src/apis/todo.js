@@ -2,20 +2,20 @@ import { instance } from "./api";
 
 const TODO_URL = "/todos";
 
-export const todoRequest = (setTodoData) => {
-  instance
+export const todoRequest = async (setTodoData) => {
+  await instance
     .get(TODO_URL)
     .then((res) => setTodoData(res.data))
     .catch((error) => {});
 };
 
-export const createTodoRequest = (
+export const createTodoRequest = async (
   todo,
   setTodoValue,
   todoData,
   setTodoData
 ) => {
-  instance
+  await instance
     .post(TODO_URL, {
       todo,
     })
@@ -34,6 +34,6 @@ export const createTodoRequest = (
     .catch((error) => {});
 };
 
-export const dleteRequset = (id) => {
-  instance.delete(`${TODO_URL}/${id}`);
+export const dleteRequset = async (id) => {
+  await instance.delete(`${TODO_URL}/${id}`);
 };

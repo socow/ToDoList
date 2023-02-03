@@ -7,18 +7,18 @@ function Todo() {
   const [todoValue, setTodoValue] = useState("");
 
   const getTodo = useCallback(() => todoRequest(setTodoData), [setTodoData]);
+
   useEffect(() => {
     getTodo();
   }, [getTodo]);
 
-  const createTodo = () => {
+  const createTodo = (e) => {
+    e.preventDefault();
     createTodoRequest(todoValue, setTodoValue, todoData, setTodoData);
   };
 
   const handleChange = (e) => {
-    const { value } = e.target;
-    setTodoValue(value);
-    e.preventDefault();
+    setTodoValue(e.target.value);
   };
 
   return (

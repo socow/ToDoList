@@ -9,6 +9,7 @@ function TodoList({ id, isCompleted, todo, getTodo }) {
       getTodo();
     }, 200);
   };
+
   return (
     <>
       <TodoListWaper key={id} id={id}>

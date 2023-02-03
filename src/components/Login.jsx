@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { loginRequest } from "../apis/login";
@@ -6,11 +6,14 @@ function Login() {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState({ email: "", password: "" });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setInputValue({ ...inputValue, [name]: value });
-    e.preventDefault();
-  };
+  const handleChange = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      setInputValue({ ...inputValue, [name]: value });
+      e.preventDefault();
+    },
+    [inputValue]
+  );
 
   const validation = !(
     inputValue.email.includes("@") && inputValue.password.length > 7
@@ -24,8 +27,8 @@ function Login() {
   const loginSubmit = (e) => {
     const email = inputValue.email;
     const password = inputValue.password;
-    e.preventDefault();
     loginRequest(email, password);
+    e.preventDefault();
   };
   return (
     <LoginForm onSubmit={loginSubmit}>

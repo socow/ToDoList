@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { signupRequest } from "../apis/signup";
@@ -16,24 +16,30 @@ function Signup() {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState({ email: "", password: "" });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setInputValue({ ...inputValue, [name]: value });
-    e.preventDefault();
-  };
-
   const goToLogin = () => {
     navigate(`/`);
   };
+
   const validation = !(
     inputValue.email.includes("@") && inputValue.password.length >= 8
   );
+
+  const handleChange = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      setInputValue({ ...inputValue, [name]: value });
+      e.preventDefault();
+    },
+    [inputValue]
+  );
+
   const signupSubmit = (e) => {
     const email = inputValue.email;
     const password = inputValue.password;
     e.preventDefault();
     signupRequest(email, password);
   };
+
   return (
     <SignupForm onSubmit={signupSubmit}>
       <Titie>회원가입</Titie>

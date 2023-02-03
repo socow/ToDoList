@@ -2,8 +2,8 @@ import { instance } from "./api";
 
 const LOGIN_URL = `/auth/signin`;
 
-export const loginRequest = (email, password) => {
-  instance
+export const loginRequest = async (email, password) => {
+  await instance
     .post(LOGIN_URL, {
       email,
       password,

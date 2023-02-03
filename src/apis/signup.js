@@ -2,7 +2,7 @@ import { instance } from "./api";
 
 const SIGNUP_URL = `/auth/signup`;
 
-export const signupRequest = (email, password) => {
+export const signupRequest = async (email, password) => {
   if (email === "" && password === "") {
     return alert("아이디 또는 비밀번호를 입력해주세요");
   } else if (!email.includes("@")) {
@@ -10,7 +10,7 @@ export const signupRequest = (email, password) => {
   } else if (password.length < 8) {
     return alert("비밀번호를 확익해주세요");
   }
-  instance
+  await instance
     .post(SIGNUP_URL, {
       email,
       password,
