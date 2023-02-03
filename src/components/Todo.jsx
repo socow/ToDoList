@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { createTodoRequest, todoRequest } from "../apis/todo";
-
+import TodoList from "./TodoList";
 function Todo() {
   const [todoData, setTodoData] = useState();
   const [todoValue, setTodoValue] = useState("");
@@ -44,12 +44,13 @@ function Todo() {
           </TodoSubmit>
         </TodoInputBox>
         {todoData?.map(({ id, isCompleted, todo }) => (
-          <TodoListWaper key={id}>
-            <CheckBox type="checkbox" defaultChecked={isCompleted} />
-            <span>{todo}</span>
-            <DeleteButton>X</DeleteButton>
-            <TodoModify>수정</TodoModify>
-          </TodoListWaper>
+          <TodoList
+            key={id}
+            id={id}
+            todo={todo}
+            isCompleted={isCompleted}
+            getTodo={getTodo}
+          />
         ))}
       </TodoBlock>
     </TodoContainer>
@@ -70,28 +71,7 @@ const TodoBlock = styled.div`
   border-radius: 10px;
   box-shadow: -9px 17px 13px rgb(0 0 0/16%);
 `;
-const TodoListWaper = styled.li`
-  padding: 10px;
-  border-bottom: 1px #ccc dotted;
-  list-style: none;
-  text-decoration: none;
-`;
-const CheckBox = styled.input``;
-const TodoModify = styled.button`
-  background-color: #fff;
-  border: none;
-  padding: 5px 9px;
-  cursor: pointer;
-  float: right;
-`;
-const DeleteButton = styled.button`
-  background-color: #fff;
-  border: none;
-  padding: 5px 9px;
-  border-radius: 50%;
-  cursor: pointer;
-  float: right;
-`;
+
 const TodoInputBox = styled.form`
   display: flex;
 `;

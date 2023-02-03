@@ -33,3 +33,7 @@ export const createTodoRequest = (
     })
     .catch((error) => {});
 };
+
+export const dleteRequset = (id) => {
+  instance.delete(`${TODO_URL}/${id}`);
+};
