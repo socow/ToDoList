@@ -20,6 +20,7 @@ function Login() {
     navigate(`/Signup`);
     e.preventDefault();
   };
+
   const loginSubmit = (e) => {
     const email = inputValue.email;
     const password = inputValue.password;

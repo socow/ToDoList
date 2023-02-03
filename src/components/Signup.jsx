@@ -2,7 +2,16 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { signupRequest } from "../apis/signup";
-
+import {
+  Titie,
+  EmailWrap,
+  Email,
+  PasswordWrap,
+  Password,
+  ButtonWrap,
+  SignupButton,
+  LoginButton,
+} from "./Login";
 function Signup() {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState({ email: "", password: "" });
@@ -61,70 +70,9 @@ function Signup() {
 }
 export default Signup;
 
-export const SignupForm = styled.form`
+const SignupForm = styled.form`
   width: 33%;
   height: 50vh;
   border-radius: 5px;
   background-color: #ffff;
-`;
-
-export const Titie = styled.div`
-  text-align: center;
-  margin: 35px;
-  font-size: 40px;
-`;
-
-export const EmailWrap = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 5px;
-`;
-
-export const PasswordWrap = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 3px;
-`;
-export const Email = styled.input`
-  height: 30px;
-  width: 70%;
-`;
-export const Password = styled.input`
-  height: 30px;
-  width: 70%;
-`;
-
-export const ButtonWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-export const LoginButton = styled.button`
-  height: 30px;
-  width: 70%;
-  padding: 5px 36px;
-  margin: 5px;
-  background-color: #ff8000e3;
-  border: none;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 600;
-`;
-export const SignupButton = styled.button`
-  height: 30px;
-  width: 70%;
-  padding: 5px 30px;
-  margin: 5px;
-  background-color: #ff8000e3;
-  border: none;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 600;
-
-  &:disabled {
-    opacity: 0.5;
-  }
 `;
