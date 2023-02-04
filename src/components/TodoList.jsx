@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { dleteRequset } from "../apis/todo";
+import { dleteRequset, updateTodoRequest } from "../apis/todo";
 
 function TodoList({ id, isCompleted, todo, getTodo }) {
+  const [isUpdata, setIsUpdata] = useState(true);
+  const [check, setCheck] = useState(isCompleted);
+  const [todoValue, setTodoValue] = useState("");
+  const [before, setBefore] = useState(isCompleted);
+  const handleChange = (e) => {
+    const { value } = e.target;
+    setTodoValue(value);
+    e.preventDefault();
+  };
+
   const deleteTodo = () => {
     dleteRequset(id);
     setTimeout(() => {
@@ -10,13 +20,59 @@ function TodoList({ id, isCompleted, todo, getTodo }) {
     }, 200);
   };
 
+  const updateTodo = () => {
+    updateTodoRequest(setIsUpdata, id, todoValue, {
+      isCompleted: check,
+    });
+    setTimeout(() => {
+      getTodo();
+    }, 200);
+  };
+  const modifyContent = () => {
+    setIsUpdata(false);
+    setTodoValue(todo);
+    setBefore(check);
+  };
+
+  const deleteContent = () => {
+    setIsUpdata(true);
+    setCheck(before);
+  };
+
   return (
     <>
-      <TodoListWaper key={id} id={id}>
-        <CheckBox type="checkbox" defaultChecked={isCompleted} />
-        <span>{todo}</span>
-        <DeleteButton onClick={deleteTodo}>X</DeleteButton>
-        <TodoModify>수정</TodoModify>
+      <TodoListWaper check={check}>
+        {isUpdata ? (
+          <>
+            <CheckBox
+              type="checkbox"
+              onClick={() => setCheck((prev) => !prev)}
+              defaultChecked={isCompleted}
+            />
+            <span>{todo}</span>
+            <DeleteButton onClick={deleteTodo}>X</DeleteButton>
+            <TodoModify onClick={modifyContent}>수정</TodoModify>
+          </>
+        ) : (
+          <>
+            <CheckBox
+              type="checkbox"
+              defaultChecked={isCompleted}
+              onClick={() => setCheck((prev) => !prev)}
+            />
+            <input
+              data-testid="modify-input"
+              value={todoValue}
+              onChange={handleChange}
+            />
+            <DeleteButton data-testid="cancel-button" onClick={deleteContent}>
+              취소
+            </DeleteButton>
+            <TodoModify data-testid="submit-button" onClick={updateTodo}>
+              제출
+            </TodoModify>
+          </>
+        )}
       </TodoListWaper>
     </>
   );
@@ -28,6 +84,9 @@ const TodoListWaper = styled.li`
   border-bottom: 1px #ccc dotted;
   list-style: none;
   text-decoration: none;
+  span {
+    text-decoration: ${(props) => (props.check ? " line-through" : "none")};
+  }
 `;
 const CheckBox = styled.input``;
 const TodoModify = styled.button`
