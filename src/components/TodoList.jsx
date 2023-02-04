@@ -50,8 +50,12 @@ function TodoList({ id, isCompleted, todo, getTodo }) {
               defaultChecked={isCompleted}
             />
             <span>{todo}</span>
-            <DeleteButton onClick={deleteTodo}>X</DeleteButton>
-            <TodoModify onClick={modifyContent}>수정</TodoModify>
+            <DeleteButton data-testid="delete-button" onClick={deleteTodo}>
+              X
+            </DeleteButton>
+            <TodoModify data-testid="modify-button" onClick={modifyContent}>
+              수정
+            </TodoModify>
           </>
         ) : (
           <>
@@ -85,6 +89,7 @@ const TodoListWaper = styled.li`
   list-style: none;
   text-decoration: none;
   span {
+    margin-left: 8px;
     text-decoration: ${(props) => (props.check ? " line-through" : "none")};
   }
 `;
