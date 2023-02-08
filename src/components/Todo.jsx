@@ -26,6 +26,10 @@ function Todo() {
       <TodoBlock>
         <TodoTitle>
           <h1>할 일 목록</h1>
+          <h1>
+            남은 할 일
+            {todoData?.filter(({ isCompleted }) => !isCompleted).length} 개
+          </h1>
         </TodoTitle>
         <TodoInputBox>
           <TodoInput
