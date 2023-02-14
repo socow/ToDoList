@@ -15,19 +15,13 @@ function TodoList({ id, isCompleted, todo, getTodo }) {
   };
 
   const deleteTodo = () => {
-    dleteRequset(id);
-    setTimeout(() => {
-      getTodo();
-    }, 200);
+    dleteRequset(id, getTodo);
   };
 
   const updateTodo = () => {
     const isCompleted = check;
     const todo = todoValue;
-    updateTodoRequest(setIsUpdata, id, todo, isCompleted);
-    setTimeout(() => {
-      getTodo();
-    }, 200);
+    updateTodoRequest(setIsUpdata, id, todo, isCompleted, getTodo);
   };
 
   const modifyContent = () => {
