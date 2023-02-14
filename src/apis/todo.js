@@ -34,21 +34,27 @@ export const createTodoRequest = async (
     .catch((error) => {});
 };
 
-export const dleteRequset = async (id) => {
-  await instance.delete(`${TODO_URL}/${id}`);
+export const dleteRequset = async (id, getTodo) => {
+  await instance.delete(`${TODO_URL}/${id}`).then((response) => {
+    getTodo();
+  });
 };
 
 export const updateTodoRequest = (
   setIsUpdata,
   id,
-  todoValue,
-  { isCompleted: check }
+  todo,
+  isCompleted,
+  getTodo
 ) => {
   setIsUpdata(true);
   instance
     .put(`${TODO_URL}/${id}`, {
-      todo: todoValue,
-      isCompleted: check,
+      todo,
+      isCompleted,
     })
-    .catch((err) => console.error(err));
+    .catch((err) => console.error(err))
+    .then((response) => {
+      getTodo();
+    });
 };

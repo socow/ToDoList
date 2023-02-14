@@ -7,6 +7,7 @@ function TodoList({ id, isCompleted, todo, getTodo }) {
   const [check, setCheck] = useState(isCompleted);
   const [todoValue, setTodoValue] = useState("");
   const [before, setBefore] = useState(isCompleted);
+
   const handleChange = (e) => {
     const { value } = e.target;
     setTodoValue(value);
@@ -14,20 +15,15 @@ function TodoList({ id, isCompleted, todo, getTodo }) {
   };
 
   const deleteTodo = () => {
-    dleteRequset(id);
-    setTimeout(() => {
-      getTodo();
-    }, 200);
+    dleteRequset(id, getTodo);
   };
 
   const updateTodo = () => {
-    updateTodoRequest(setIsUpdata, id, todoValue, {
-      isCompleted: check,
-    });
-    setTimeout(() => {
-      getTodo();
-    }, 200);
+    const isCompleted = check;
+    const todo = todoValue;
+    updateTodoRequest(setIsUpdata, id, todo, isCompleted, getTodo);
   };
+
   const modifyContent = () => {
     setIsUpdata(false);
     setTodoValue(todo);
