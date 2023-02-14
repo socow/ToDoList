@@ -38,17 +38,12 @@ export const dleteRequset = async (id) => {
   await instance.delete(`${TODO_URL}/${id}`);
 };
 
-export const updateTodoRequest = (
-  setIsUpdata,
-  id,
-  todoValue,
-  { isCompleted: check }
-) => {
+export const updateTodoRequest = (setIsUpdata, id, todo, isCompleted) => {
   setIsUpdata(true);
   instance
     .put(`${TODO_URL}/${id}`, {
-      todo: todoValue,
-      isCompleted: check,
+      todo,
+      isCompleted,
     })
     .catch((err) => console.error(err));
 };

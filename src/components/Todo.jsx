@@ -2,9 +2,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { createTodoRequest, todoRequest } from "../apis/todo";
 import TodoList from "./TodoList";
+import { isCompletedSelector, todoState } from "../atoms/TodoState";
+import { useRecoilState, useRecoilValue } from "recoil";
+
 function Todo() {
-  const [todoData, setTodoData] = useState();
+  const [todoData, setTodoData] = useRecoilState(todoState);
   const [todoValue, setTodoValue] = useState("");
+  const theRest = useRecoilValue(isCompletedSelector);
 
   const getTodo = useCallback(() => todoRequest(setTodoData), [setTodoData]);
 
@@ -26,10 +30,7 @@ function Todo() {
       <TodoBlock>
         <TodoTitle>
           <h1>할 일 목록</h1>
-          <h1>
-            남은 할 일
-            {todoData?.filter(({ isCompleted }) => !isCompleted).length} 개
-          </h1>
+          <h2>남은 할 일 {theRest}개</h2>
         </TodoTitle>
         <TodoInputBox>
           <TodoInput
