@@ -1,75 +1,57 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { signupRequest } from "../apis/signup";
+import InputGroup from "./InputGroup";
 import {
   Titie,
   EmailWrap,
-  Email,
   PasswordWrap,
-  Password,
   ButtonWrap,
   SignupButton,
   LoginButton,
 } from "./Login";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  emailState,
+  passwordState,
+  inputValueSelector,
+  signupPost,
+} from "../store/auth.recoil";
+
 function Signup() {
+  const [email, setEmail] = useRecoilState(emailState);
+  const [password, setPassword] = useRecoilState(passwordState);
+  const useCheck = useRecoilValue(inputValueSelector);
+  const signupRequest = useRecoilValue(signupPost);
+
   const navigate = useNavigate();
-  const [inputValue, setInputValue] = useState({ email: "", password: "" });
 
   const goToLogin = () => {
     navigate(`/`);
   };
 
-  const validation = !(
-    inputValue.email.includes("@") && inputValue.password.length >= 8
-  );
-
-  const handleChange = useCallback(
-    (e) => {
-      const { name, value } = e.target;
-      setInputValue({ ...inputValue, [name]: value });
-      e.preventDefault();
-    },
-    [inputValue]
-  );
-
-  const signupSubmit = (e) => {
-    const email = inputValue.email;
-    const password = inputValue.password;
-    e.preventDefault();
-    signupRequest(email, password);
-  };
-
   return (
-    <SignupForm onSubmit={signupSubmit}>
+    <SignupForm onSubmit={signupRequest}>
       <Titie>회원가입</Titie>
       <EmailWrap>
-        <Email
-          data-testid="email-input"
+        <InputGroup
           type="email"
-          name="email"
           placeholder="이메일"
-          value={inputValue.email}
-          onChange={handleChange}
+          value={email}
+          setValue={setEmail}
         />
       </EmailWrap>
       <PasswordWrap>
-        <Password
-          data-testid="password-input"
+        <InputGroup
           type="password"
-          name="password"
           placeholder="비밀번호를 입력해주세요"
-          value={inputValue.password}
-          onChange={handleChange}
+          value={password}
+          setValue={setPassword}
         />
       </PasswordWrap>
       <ButtonWrap>
-        <SignupButton data-testid="signup-button" disabled={validation}>
-          회원가입
-        </SignupButton>
-        <LoginButton data-testid="signin-button" onClick={goToLogin}>
-          로그인
-        </LoginButton>
+        <SignupButton disabled={useCheck}>회원가입</SignupButton>
+        <LoginButton onClick={goToLogin}>로그인</LoginButton>
       </ButtonWrap>
     </SignupForm>
   );
@@ -77,8 +59,9 @@ function Signup() {
 export default Signup;
 
 const SignupForm = styled.form`
-  width: 33%;
-  height: 50vh;
-  border-radius: 5px;
-  background-color: #ffff;
+  padding: 30px;
+  margin-top: 50px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: -9px 17px 13px rgb(0 0 0/16%);
 `;

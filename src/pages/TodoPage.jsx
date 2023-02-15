@@ -12,13 +12,15 @@ function TodoPage() {
   }, [navigate]);
 
   return (
-    <TodoWrapper>
+    <TodoContainer>
       <Todo />
-    </TodoWrapper>
+    </TodoContainer>
   );
 }
 export default TodoPage;
 
-export const TodoWrapper = styled.div`
+export const TodoContainer = styled.div`
   background-color: #ffff;
+  margin: auto;
+  max-width: 600px;
 `;

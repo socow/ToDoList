@@ -1,65 +1,50 @@
-import React, { useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import styled from "styled-components";
-import { loginRequest } from "../apis/login";
+import { useNavigate } from "react-router-dom";
+import InputGroup from "./InputGroup";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  emailState,
+  passwordState,
+  inputValueSelector,
+  loginPost,
+} from "../store/auth.recoil";
+
 function Login() {
+  const [email, setEmail] = useRecoilState(emailState);
+  const [password, setPassword] = useRecoilState(passwordState);
+  const useCheck = useRecoilValue(inputValueSelector);
+  const loginRequest = useRecoilValue(loginPost);
+
   const navigate = useNavigate();
-  const [inputValue, setInputValue] = useState({ email: "", password: "" });
-
-  const handleChange = useCallback(
-    (e) => {
-      const { name, value } = e.target;
-      setInputValue({ ...inputValue, [name]: value });
-      e.preventDefault();
-    },
-    [inputValue]
-  );
-
-  const validation = !(
-    inputValue.email.includes("@") && inputValue.password.length > 7
-  );
 
   const goToSiginup = (e) => {
     navigate(`/Signup`);
     e.preventDefault();
   };
 
-  const loginSubmit = (e) => {
-    const email = inputValue.email;
-    const password = inputValue.password;
-    loginRequest(email, password);
-    e.preventDefault();
-  };
   return (
-    <LoginForm onSubmit={loginSubmit}>
+    <LoginForm onSubmit={loginRequest}>
       <Titie>로그인</Titie>
       <EmailWrap>
-        <Email
-          data-testid="email-input"
+        <InputGroup
           type="email"
-          name="email"
           placeholder="이메일"
-          value={inputValue.email}
-          onChange={handleChange}
+          value={email}
+          setValue={setEmail}
         />
       </EmailWrap>
       <PasswordWrap>
-        <Password
-          data-testid="password-input"
+        <InputGroup
           type="password"
-          name="password"
           placeholder="비밀번호"
-          value={inputValue.password}
-          onChange={handleChange}
+          value={password}
+          setValue={setPassword}
         />
       </PasswordWrap>
       <ButtonWrap>
-        <LoginButton data-testid="signin-button" disabled={validation}>
-          로그인
-        </LoginButton>
-        <SignupButton data-testid="signup-button" onClick={goToSiginup}>
-          회원가입
-        </SignupButton>
+        <LoginButton disabled={useCheck}>로그인</LoginButton>
+        <SignupButton onClick={goToSiginup}>회원가입</SignupButton>
       </ButtonWrap>
     </LoginForm>
   );
@@ -67,10 +52,11 @@ function Login() {
 export default Login;
 
 export const LoginForm = styled.form`
-  width: 33%;
-  height: 50vh;
-  background-color: #ffff;
-  border-radius: 5px;
+  padding: 30px;
+  margin-top: 50px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: -9px 17px 13px rgb(0 0 0/16%);
 `;
 
 export const Titie = styled.div`
@@ -92,14 +78,6 @@ export const PasswordWrap = styled.div`
   justify-content: center;
   padding: 3px;
 `;
-export const Email = styled.input`
-  height: 30px;
-  width: 70%;
-`;
-export const Password = styled.input`
-  height: 30px;
-  width: 70%;
-`;
 
 export const ButtonWrap = styled.div`
   display: flex;
@@ -118,9 +96,10 @@ export const LoginButton = styled.button`
   font-size: 12px;
   font-weight: 600;
 
-  &:disabled {
+  /* &:disabled {
     opacity: 0.5;
-  }
+  } */
+  //
 `;
 export const SignupButton = styled.button`
   height: 30px;

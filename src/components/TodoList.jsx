@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { dleteRequset, updateTodoRequest } from "../apis/todo";
 
@@ -8,11 +8,14 @@ function TodoList({ id, isCompleted, todo, getTodo }) {
   const [todoValue, setTodoValue] = useState("");
   const [before, setBefore] = useState(isCompleted);
 
-  const handleChange = (e) => {
-    const { value } = e.target;
-    setTodoValue(value);
-    e.preventDefault();
-  };
+  const handleChange = useCallback(
+    (e) => {
+      const { value } = e.target;
+      setTodoValue(value);
+      e.preventDefault();
+    },
+    [setTodoValue]
+  );
 
   const deleteTodo = () => {
     dleteRequset(id, getTodo);
@@ -46,12 +49,8 @@ function TodoList({ id, isCompleted, todo, getTodo }) {
               defaultChecked={isCompleted}
             />
             <span>{todo}</span>
-            <DeleteButton data-testid="delete-button" onClick={deleteTodo}>
-              X
-            </DeleteButton>
-            <TodoModify data-testid="modify-button" onClick={modifyContent}>
-              수정
-            </TodoModify>
+            <DeleteButton onClick={deleteTodo}>X</DeleteButton>
+            <TodoModify onClick={modifyContent}>수정</TodoModify>
           </>
         ) : (
           <>
@@ -60,17 +59,9 @@ function TodoList({ id, isCompleted, todo, getTodo }) {
               defaultChecked={isCompleted}
               onClick={() => setCheck((prev) => !prev)}
             />
-            <input
-              data-testid="modify-input"
-              value={todoValue}
-              onChange={handleChange}
-            />
-            <DeleteButton data-testid="cancel-button" onClick={deleteContent}>
-              취소
-            </DeleteButton>
-            <TodoModify data-testid="submit-button" onClick={updateTodo}>
-              제출
-            </TodoModify>
+            <input value={todoValue} onChange={handleChange} />
+            <DeleteButton onClick={deleteContent}>취소</DeleteButton>
+            <TodoModify onClick={updateTodo}>제출</TodoModify>
           </>
         )}
       </TodoListWaper>
