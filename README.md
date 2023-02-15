@@ -2,6 +2,9 @@
 
 DEMO : [DEMO](https://velvety-rugelach-f5ddc4.netlify.app)
 
+<img src="https://user-images.githubusercontent.com/105201721/219011346-98616444-d90e-449c-a6c8-48add16a6c45.gif
+">
+
 # 프로젝트 설치 및 실행 방법
 
 ```
@@ -160,12 +163,87 @@ instance.interceptors.request.use(
 `axios inpercepter` 를 통해서 api 통신시 반복되는 header, token을
 생략할 수 있도록 코드 작성, 불필요한 코드 반복을 피하고 가독성을 높일 수 있었습니다
 
-## 3.useCallback
+## 4.useCallback
 
 - useCallback 사용
+  `src/components/Todo.js`
 
 ```javascript
 const getTodo = useCallback(() => todoRequest(setTodoData), [setTodoData]);
 ```
 
 useCallback을 사용하여 함수를 재 선언 하는것을 방지하였습니다
+
+## 5.상태관리
+
+- recoil을 통한 상태관리
+
+```javascript
+//src/store/auth.recoil.js
+import { atom, selector } from "recoil";
+import { loginRequest } from "../apis/login";
+import { signupRequest } from "../apis/signup";
+
+export const emailState = atom({
+  key: "email",
+  default: "",
+});
+export const passwordState = atom({
+  key: "passwordState",
+  default: "",
+});
+
+export const inputValueSelector = selector({
+  key: "inputValueSelector",
+  get: ({ get }) => {
+    const email = get(emailState);
+    const emailReg = /^[a-zA-Z0-9._%+-]+@/g;
+    const password = get(passwordState);
+    return !(emailReg.test(email) && password.length >= 8);
+  },
+});
+
+export const loginPost = selector({
+  key: "loginPost",
+  get: ({ get }) => {
+    const email = get(emailState);
+    const password = get(passwordState);
+    const loginSubmit = async (e) => {
+      await e.preventDefault();
+      loginRequest(email, password);
+    };
+    return loginSubmit;
+  },
+});
+
+export const signupPost = selector({
+  key: "signupPost",
+  get: ({ get }) => {
+    const email = get(emailState);
+    const password = get(passwordState);
+    const signupSubmit = async (e) => {
+      await e.preventDefault();
+      signupRequest(email, password);
+    };
+    return signupSubmit;
+  },
+});
+
+//src/store/todo.recoil.js
+import { atom, selector } from "recoil";
+
+export const todoState = atom({
+  key: "todoState",
+  default: [],
+});
+
+export const isCompletedSelector = selector({
+  key: "isCompletedSelector",
+  get: ({ get }) => {
+    const todos = get(todoState);
+    return todos.filter(({ isCompleted }) => !isCompleted).length;
+  },
+});
+```
+
+Recoil을 통해 전역 상태를 관리하고, 필요한 hook을 제작하여 사용자가 사용하기 편리하게 추가하였습니다
