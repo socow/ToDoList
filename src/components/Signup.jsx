@@ -2,14 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import InputGroup from "./InputGroup";
-import {
-  Titie,
-  EmailWrap,
-  PasswordWrap,
-  ButtonWrap,
-  SignupButton,
-  LoginButton,
-} from "./Login";
+import { Titie, InputWrap, ButtonWrap, AuthButton } from "./Login";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   emailState,
@@ -33,25 +26,24 @@ function Signup() {
   return (
     <SignupForm onSubmit={signupRequest}>
       <Titie>회원가입</Titie>
-      <EmailWrap>
+      <InputWrap>
         <InputGroup
           type="email"
           placeholder="이메일"
           value={email}
           setValue={setEmail}
         />
-      </EmailWrap>
-      <PasswordWrap>
+
         <InputGroup
           type="password"
           placeholder="비밀번호를 입력해주세요"
           value={password}
           setValue={setPassword}
         />
-      </PasswordWrap>
+      </InputWrap>
       <ButtonWrap>
-        <SignupButton disabled={useCheck}>회원가입</SignupButton>
-        <LoginButton onClick={goToLogin}>로그인</LoginButton>
+        <AuthButton disabled={useCheck}>회원가입</AuthButton>
+        <AuthButton onClick={goToLogin}>로그인</AuthButton>
       </ButtonWrap>
     </SignupForm>
   );

@@ -26,25 +26,24 @@ function Login() {
   return (
     <LoginForm onSubmit={loginRequest}>
       <Titie>로그인</Titie>
-      <EmailWrap>
+      <InputWrap>
         <InputGroup
           type="email"
           placeholder="이메일"
           value={email}
           setValue={setEmail}
         />
-      </EmailWrap>
-      <PasswordWrap>
+
         <InputGroup
           type="password"
           placeholder="비밀번호"
           value={password}
           setValue={setPassword}
         />
-      </PasswordWrap>
+      </InputWrap>
       <ButtonWrap>
-        <LoginButton disabled={useCheck}>로그인</LoginButton>
-        <SignupButton onClick={goToSiginup}>회원가입</SignupButton>
+        <AuthButton disabled={useCheck}>로그인</AuthButton>
+        <AuthButton onClick={goToSiginup}>회원가입</AuthButton>
       </ButtonWrap>
     </LoginForm>
   );
@@ -61,22 +60,15 @@ export const LoginForm = styled.form`
 
 export const Titie = styled.div`
   text-align: center;
-  margin: 35px;
+  margin: 20px;
   font-size: 40px;
 `;
 
-export const EmailWrap = styled.div`
+export const InputWrap = styled.div`
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
-  margin: 5px;
-`;
-
-export const PasswordWrap = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 3px;
+  margin-bottom: 20px;
 `;
 
 export const ButtonWrap = styled.div`
@@ -85,28 +77,13 @@ export const ButtonWrap = styled.div`
   align-items: center;
   justify-content: center;
 `;
-export const LoginButton = styled.button`
-  height: 30px;
+export const AuthButton = styled.button`
+  height: 35px;
   width: 70%;
   padding: 5px 36px;
   margin: 5px;
   background-color: #ff8000e3;
-  border: none;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 600;
-
-  /* &:disabled {
-    opacity: 0.5;
-  } */
-  //
-`;
-export const SignupButton = styled.button`
-  height: 30px;
-  width: 70%;
-  padding: 5px 30px;
-  margin: 5px;
-  background-color: #ff8000e3;
+  border-radius: 3px;
   border: none;
   cursor: pointer;
   font-size: 12px;

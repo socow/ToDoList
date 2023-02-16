@@ -17,6 +17,6 @@ function InputGroup({ type = "text", placeholder = "", value, setValue }) {
 export default InputGroup;
 
 const AuthInput = styled.input`
-  height: 30px;
+  height: 35px;
   width: 70%;
 `;
