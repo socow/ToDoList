@@ -2,8 +2,7 @@
 
 DEMO : [DEMO](https://velvety-rugelach-f5ddc4.netlify.app)
 
-<img src="https://user-images.githubusercontent.com/105201721/219011346-98616444-d90e-449c-a6c8-48add16a6c45.gif
-">
+![화면 기록 2023-02-15 오후 7 56 17](https://user-images.githubusercontent.com/105201721/219314538-58681e50-dd6f-43cf-bf5f-663621cba440.gif)
 
 # 프로젝트 설치 및 실행 방법
 
