@@ -1,20 +1,21 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Login from "../components/Login";
+import Auth from "../components/Auth";
 
 function LoginPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
+      alert("자동 로그인 되었습니다.");
       navigate(`/todo`);
     }
   }, [navigate]);
 
   return (
     <LoginContainer>
-      <Login />
+      <Auth />
     </LoginContainer>
   );
 }

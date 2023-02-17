@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import InputGroup from "./InputGroup";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
@@ -8,24 +7,31 @@ import {
   passwordState,
   inputValueSelector,
   loginPost,
+  signupPost,
 } from "../store/auth.recoil";
 
 function Login() {
   const [email, setEmail] = useRecoilState(emailState);
   const [password, setPassword] = useRecoilState(passwordState);
+  const [isLogin, setIsLogin] = useState(true);
   const useCheck = useRecoilValue(inputValueSelector);
   const loginRequest = useRecoilValue(loginPost);
+  const signupRequest = useRecoilValue(signupPost);
 
-  const navigate = useNavigate();
-
-  const goToSiginup = (e) => {
-    navigate(`/Signup`);
+  const createAccountHandler = (e) => {
     e.preventDefault();
+    setIsLogin((current) => !current);
+  };
+
+  const authRequest = async (e) => {
+    e.preventDefault();
+    const api = isLogin ? loginRequest : signupRequest;
+    await api();
   };
 
   return (
-    <LoginForm onSubmit={loginRequest}>
-      <Titie>로그인</Titie>
+    <LoginForm onSubmit={authRequest}>
+      <Titie> {isLogin ? "로그인" : "회원가입"}</Titie>
       <InputWrap>
         <InputGroup
           type="email"
@@ -42,8 +48,12 @@ function Login() {
         />
       </InputWrap>
       <ButtonWrap>
-        <AuthButton disabled={useCheck}>로그인</AuthButton>
-        <AuthButton onClick={goToSiginup}>회원가입</AuthButton>
+        <LoginBtn type="submit" disabled={useCheck}>
+          {isLogin ? "로그인" : "회원가입"}
+        </LoginBtn>
+        <CreateAccountBtn onClick={createAccountHandler}>
+          {isLogin ? "회원가입" : "로그인"}
+        </CreateAccountBtn>
       </ButtonWrap>
     </LoginForm>
   );
@@ -77,12 +87,21 @@ export const ButtonWrap = styled.div`
   align-items: center;
   justify-content: center;
 `;
-export const AuthButton = styled.button`
+export const LoginBtn = styled.button`
   height: 35px;
   width: 70%;
   padding: 5px 36px;
   margin: 5px;
   background-color: #ff8000e3;
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+`;
+export const CreateAccountBtn = styled.button`
+  margin-top: 20px;
+  background: #fff;
   border-radius: 3px;
   border: none;
   cursor: pointer;

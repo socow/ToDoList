@@ -23,20 +23,17 @@ $ npm start
 📦 src
 ┣ 📂apis
 ┃  ┣ 📜 api.js
-┃  ┣ 📜 login.js
-┃  ┣ 📜 signup.js
+┃  ┣ 📜 auth.js
 ┃  ┗ 📜 todo.js
+┣ 📂components
+┃   ┣ 📜 Auth.jsx
+┃   ┣ 📜 Todo.jsx
+┃   ┗ 📜 TodoLIst.jsx
 ┣ 📂store
 ┃  ┣ 📜 auth.recoil.jsx
 ┃  ┗ 📜 todo.recoil.js
-┣ 📂components
-┃   ┣ 📜 Login.jsx
-┃   ┣ 📜 SignUp.jsx
-┃   ┣ 📜 Todo.jsx
-┃   ┗ 📜 TodoLIst.jsx
 ┣ 📂pages
-┃  ┣ 📜 LoginPages.jsx
-┃  ┣ 📜 SignupPages.jsx
+┃  ┣ 📜 AuthPages.jsx
 ┃  ┗ 📜 TodoPages.jsx
 ┃
 ┣ 📜 App.js
@@ -70,41 +67,58 @@ export const inputValueSelector = selector({
 });
 ```
 
-- 로그인 form submit 함수
+- 로그인,회원가입 form submit 함수
 
 ```javascript
-export const loginPost = selector({
-  key: "loginPost",
-  get: ({ get }) => {
-    const email = get(emailState);
-    const password = get(passwordState);
-    const loginSubmit = async (e) => {
-      await e.preventDefault();
-      loginRequest(email, password);
-    };
-    return loginSubmit;
-  },
-});
+const authRequest = async (e) => {
+  e.preventDefault();
+  const api = isLogin ? loginRequest : signupRequest;
+  await api();
+};
 ```
 
-- 로그인 post 요청
+- 로그인,회원가입 post 요청
 
 ```javascript
-const LOGIN_URL = `/auth/signin`;
+const URLS = {
+  LOGIN: `/auth/signin`,
+  SIGNUP: `/auth/signup`,
+};
 
-export const loginRequest = async (email, password) => {
-  await instance
-    .post(LOGIN_URL, {
-      email,
-      password,
-    })
-    .then((res) => {
-      localStorage.setItem("token", res.data.access_token);
-      window.location.replace("/todo");
-    })
-    .catch((error) => {
-      alert("아이디 또는 비밀번호를 확인해주세요");
-    });
+export const authRequest = {
+  async login(email, password) {
+    instance
+      .post(URLS.LOGIN, {
+        email,
+        password,
+      })
+      .then((res) => {
+        localStorage.setItem("token", res.data.access_token);
+        window.location.replace("/todo");
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          alert(error.response.data.message);
+        }
+      });
+  },
+
+  async signup(email, password) {
+    instance
+      .post(URLS.SIGNUP, {
+        email,
+        password,
+      })
+      .then((res) => {
+        alert("회원가입이 완료되었습니다");
+        window.location.replace("/");
+      })
+      .catch((error) => {
+        if (error.response.status === 400) {
+          alert(error.response.data.message);
+        }
+      });
+  },
 };
 ```
 
@@ -118,6 +132,7 @@ const navigate = useNavigate();
 
 useEffect(() => {
   if (localStorage.getItem("token")) {
+    alert("자동 로그인 되었습니다.");
     navigate(`/todo`);
   }
 }, [navigate]);
@@ -180,8 +195,7 @@ useCallback을 사용하여 함수를 재 선언 하는것을 방지하였습니
 ```javascript
 //src/store/auth.recoil.js
 import { atom, selector } from "recoil";
-import { loginRequest } from "../apis/login";
-import { signupRequest } from "../apis/signup";
+import { authRequest } from "../apis/auth";
 
 export const emailState = atom({
   key: "email",
@@ -207,11 +221,10 @@ export const loginPost = selector({
   get: ({ get }) => {
     const email = get(emailState);
     const password = get(passwordState);
-    const loginSubmit = async (e) => {
-      await e.preventDefault();
-      loginRequest(email, password);
+    const authSubmit = async (e) => {
+      await authRequest.login(email, password);
     };
-    return loginSubmit;
+    return authSubmit;
   },
 });
 
@@ -221,8 +234,7 @@ export const signupPost = selector({
     const email = get(emailState);
     const password = get(passwordState);
     const signupSubmit = async (e) => {
-      await e.preventDefault();
-      signupRequest(email, password);
+      await authRequest.signup(email, password);
     };
     return signupSubmit;
   },
