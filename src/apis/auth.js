@@ -5,7 +5,7 @@ const URLS = {
   SIGNUP: `/auth/signup`,
 };
 
-export const authRequest = {
+export const AuthRequest = {
   async login(email, password) {
     instance
       .post(URLS.LOGIN, {

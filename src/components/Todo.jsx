@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import { createTodoRequest, todoRequest } from "../apis/todo";
+import { TodoRequset } from "../apis/todo";
 import TodoList from "./TodoList";
 import { isCompletedSelector, todoState } from "../store/todo.recoil";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -10,7 +10,10 @@ function Todo() {
   const [todoValue, setTodoValue] = useState("");
   const theRest = useRecoilValue(isCompletedSelector);
 
-  const getTodo = useCallback(() => todoRequest(setTodoData), [setTodoData]);
+  const getTodo = useCallback(
+    () => TodoRequset.get(setTodoData),
+    [setTodoData]
+  );
 
   useEffect(() => {
     getTodo();
@@ -18,7 +21,7 @@ function Todo() {
 
   const createTodo = (e) => {
     e.preventDefault();
-    createTodoRequest(todoValue, setTodoValue, todoData, setTodoData);
+    TodoRequset.create(todoValue, setTodoValue, todoData, setTodoData);
   };
 
   const handleChange = (e) => {

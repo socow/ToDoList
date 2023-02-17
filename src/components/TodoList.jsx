@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
-import { dleteRequset, updateTodoRequest } from "../apis/todo";
+import { TodoRequset } from "../apis/todo";
 
 function TodoList({ id, isCompleted, todo, getTodo }) {
   const [isUpdata, setIsUpdata] = useState(true);
@@ -18,54 +18,45 @@ function TodoList({ id, isCompleted, todo, getTodo }) {
   );
 
   const deleteTodo = () => {
-    dleteRequset(id, getTodo);
-  };
-
-  const updateTodo = () => {
-    const isCompleted = check;
-    const todo = todoValue;
-    updateTodoRequest(setIsUpdata, id, todo, isCompleted, getTodo);
+    if (isUpdata) {
+      TodoRequset.dlete(id, getTodo);
+    } else if (!isUpdata) {
+      setIsUpdata(true);
+      setCheck(before);
+    }
   };
 
   const modifyContent = () => {
-    setIsUpdata(false);
-    setTodoValue(todo);
-    setBefore(check);
-  };
-
-  const deleteContent = () => {
-    setIsUpdata(true);
-    setCheck(before);
+    if (isUpdata) {
+      setIsUpdata(false);
+      setTodoValue(todo);
+      setBefore(check);
+    } else if (!isUpdata) {
+      const isCompleted = check;
+      const todo = todoValue;
+      TodoRequset.update(setIsUpdata, id, todo, isCompleted, getTodo);
+    }
   };
 
   return (
-    <>
-      <TodoListWaper check={check}>
-        {isUpdata ? (
-          <>
-            <CheckBox
-              type="checkbox"
-              onClick={() => setCheck((prev) => !prev)}
-              defaultChecked={isCompleted}
-            />
-            <span>{todo}</span>
-            <DeleteButton onClick={deleteTodo}>X</DeleteButton>
-            <TodoModify onClick={modifyContent}>수정</TodoModify>
-          </>
-        ) : (
-          <>
-            <CheckBox
-              type="checkbox"
-              defaultChecked={isCompleted}
-              onClick={() => setCheck((prev) => !prev)}
-            />
-            <input value={todoValue} onChange={handleChange} />
-            <DeleteButton onClick={deleteContent}>취소</DeleteButton>
-            <TodoModify onClick={updateTodo}>제출</TodoModify>
-          </>
-        )}
-      </TodoListWaper>
-    </>
+    <TodoListWaper check={check}>
+      <CheckBox
+        type="checkbox"
+        onClick={() => setCheck((prev) => !prev)}
+        defaultChecked={isCompleted}
+      />
+      {isUpdata ? (
+        <span>{todo}</span>
+      ) : (
+        <input value={todoValue} onChange={handleChange} />
+      )}
+      <DeleteButton onClick={deleteTodo}>
+        {isUpdata ? "X" : "취소"}
+      </DeleteButton>
+      <TodoModify onClick={modifyContent}>
+        {isUpdata ? "수정" : "제출"}
+      </TodoModify>
+    </TodoListWaper>
   );
 }
 export default TodoList;

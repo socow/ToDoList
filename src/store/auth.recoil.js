@@ -1,5 +1,5 @@
 import { atom, selector } from "recoil";
-import { authRequest } from "../apis/auth";
+import { AuthRequest } from "../apis/auth";
 
 export const emailState = atom({
   key: "email",
@@ -26,7 +26,7 @@ export const loginPost = selector({
     const email = get(emailState);
     const password = get(passwordState);
     const authSubmit = async (e) => {
-      await authRequest.login(email, password);
+      await AuthRequest.login(email, password);
     };
     return authSubmit;
   },
@@ -38,7 +38,7 @@ export const signupPost = selector({
     const email = get(emailState);
     const password = get(passwordState);
     const signupSubmit = async (e) => {
-      await authRequest.signup(email, password);
+      await AuthRequest.signup(email, password);
     };
     return signupSubmit;
   },
