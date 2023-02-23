@@ -22,22 +22,24 @@ $ npm start
 
 📦 src
 ┣ 📂apis
-┃  ┣ 📜 api.js
-┃  ┣ 📜 auth.js
-┃  ┗ 📜 todo.js
+┃  ┣ 📜 api.ts
+┃  ┣ 📜 auth.ts
+┃  ┗ 📜 todo.ts
 ┣ 📂components
-┃   ┣ 📜 Auth.jsx
-┃   ┣ 📜 Todo.jsx
-┃   ┗ 📜 TodoLIst.jsx
+┃   ┣ 📜 Auth.tsx
+┃   ┣ 📜 Todo.tsx
+┃   ┗ 📜 TodoLIst.tsx
 ┣ 📂store
-┃  ┣ 📜 auth.recoil.jsx
-┃  ┗ 📜 todo.recoil.js
+┃  ┣ 📜 auth.recoil.ts
+┃  ┗ 📜 todo.recoil.ts
+┣ 📂model
+┃  ┣ 📜 Todo.ts
 ┣ 📂pages
-┃  ┣ 📜 AuthPages.jsx
-┃  ┗ 📜 TodoPages.jsx
+┃  ┣ 📜 AuthPages.tsx
+┃  ┗ 📜 TodoPages.tsx
 ┃
-┣ 📜 App.js
-┗ 📜 index.js
+┣ 📜 App.tsx
+┗ 📜 index.tsx
 
 
 
@@ -70,10 +72,10 @@ export const inputValueSelector = selector({
 - 로그인,회원가입 form submit 함수
 
 ```javascript
-const authRequest = async (e) => {
+const authRequest = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   const api = isLogin ? loginRequest : signupRequest;
-  await api();
+  return api();
 };
 ```
 
@@ -85,8 +87,8 @@ const URLS = {
   SIGNUP: `/auth/signup`,
 };
 
-export const authRequest = {
-  async login(email, password) {
+export const AuthRequest = {
+  async login(email: string, password: string) {
     instance
       .post(URLS.LOGIN, {
         email,
@@ -103,7 +105,7 @@ export const authRequest = {
       });
   },
 
-  async signup(email, password) {
+  async signup(email: string, password: string) {
     instance
       .post(URLS.SIGNUP, {
         email,
@@ -148,84 +150,82 @@ Todo CRUD 요청
 const TODO_URL = "/todos";
 
 export const TodoRequset = {
-  async get(setTodoData) {
-    instance
-      .get(TODO_URL)
-      .then((res) => setTodoData(res.data))
-      .catch((error) => {});
+  async get(setTodoData: React.Dispatch<React.SetStateAction<any>>) {
+    try {
+      const res = await instance.get(TODO_URL);
+      if (res.status === 200) return setTodoData(res.data);
+
+      throw new Error("API통신 실패");
+    } catch (error: any) {
+      console.error(error.message);
+      throw new Error();
+    }
+  },
+  async create(todo: string) {
+    try {
+      const res = await instance.post(TODO_URL, { todo });
+      if (res.status === 201) return res.data;
+
+      throw new Error("API통신 실패");
+    } catch (error: any) {
+      console.error(error.message);
+      throw new Error();
+    }
   },
 
-  async create(todo, setTodoValue, todoData, setTodoData) {
-    instance
-      .post(TODO_URL, {
-        todo,
-      })
-      .then((res) => {
-        setTodoData([
-          ...todoData,
-          {
-            id: res.data.id,
-            todo: res.data.todo,
-            isCompleted: res.data.isCompleted,
-            userId: res.data.userId,
-          },
-        ]);
-        setTodoValue("");
-      })
-      .catch((error) => {});
+  async dlete(id: number, getTodo: () => Promise<void>) {
+    try {
+      const res = await instance.delete(`${TODO_URL}/${id}`);
+      if (res.status === 204) return getTodo();
+    } catch (error: any) {
+      console.error(error.message);
+      throw new Error();
+    }
   },
 
-  async dlete(id, getTodo) {
-    instance.delete(`${TODO_URL}/${id}`).then((response) => {
-      getTodo();
-    });
-  },
-
-  async update(setIsUpdata, id, todo, isCompleted, getTodo) {
+  async update(
+    setIsUpdata: React.Dispatch<React.SetStateAction<boolean>>,
+    id: number,
+    todo: string,
+    isCompleted: boolean,
+    getTodo: () => Promise<void>
+  ) {
     setIsUpdata(true);
-    instance
-      .put(`${TODO_URL}/${id}`, {
+    try {
+      const res = await instance.put(`${TODO_URL}/${id}`, {
         todo,
         isCompleted,
-      })
-      .catch((err) => console.error(err))
-      .then((response) => {
-        getTodo();
       });
+      if (res.status === 200) return getTodo();
+    } catch (error: any) {
+      console.error(error.message);
+      throw new Error();
+    }
   },
 };
+
 ```
 
 - axios inpercepter 사용
   `src/apis/api.js`
 
 ```javascript
-import axios from "axios";
-
 const ACCESS_TOKEN = localStorage.getItem("token");
 
 export const instance = axios.create({
-  baseURL: `https://pre-onboarding-selection-task.shop`,
+  baseURL: " https://pre-onboarding-selection-task.shop/",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-instance.interceptors.request.use(
-  function (config) {
-    if (ACCESS_TOKEN) {
-      config.headers = { Authorization: `Bearer ${ACCESS_TOKEN}` };
-    } else {
-      config.headers = {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      };
-    }
-    return config;
-  },
-  function (error) {
-    return Promise.reject(error);
+instance.interceptors.request.use((req) => {
+  if (req.headers) {
+    req.headers.Authorization = `Bearer ${ACCESS_TOKEN}`;
   }
-);
+
+  return req;
+});
 ```
 
 `axios inpercepter` 를 통해서 api 통신시 반복되는 header, token을
@@ -237,7 +237,7 @@ instance.interceptors.request.use(
   `src/components/Todo.js`
 
 ```javascript
-const getTodo = useCallback(() => todoRequest(setTodoData), [setTodoData]);
+const getTodo = useCallback(() => TodoRequset.get(setTodoData), [setTodoData]);
 ```
 
 useCallback을 사용하여 함수를 재 선언 하는것을 방지하였습니다
@@ -296,8 +296,8 @@ export const signupPost = selector({
 
 //src/store/todo.recoil.js
 import { atom, selector } from "recoil";
-
-export const todoState = atom({
+import { Todo } from "src/model/Todo";
+export const todoState = atom<Todo[]>({
   key: "todoState",
   default: [],
 });
@@ -309,6 +309,7 @@ export const isCompletedSelector = selector({
     return todos.filter(({ isCompleted }) => !isCompleted).length;
   },
 });
+
 ```
 
 Recoil을 통해 전역 상태를 관리하고, 필요한 hook을 제작하여 사용자가 사용하기 편리하게 추가하였습니다

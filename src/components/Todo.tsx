@@ -19,12 +19,14 @@ function Todo() {
     getTodo();
   }, [getTodo]);
 
-  const createTodo = (e) => {
+  const createTodo = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    TodoRequset.create(todoValue, setTodoValue, todoData, setTodoData);
+    const data = await TodoRequset.create(todoValue);
+    setTodoData((prev) => [...prev, data]);
+    setTodoValue("");
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTodoValue(e.target.value);
   };
 

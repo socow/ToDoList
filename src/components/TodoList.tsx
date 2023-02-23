@@ -1,15 +1,16 @@
 import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { TodoRequset } from "../apis/todo";
+import { Todo } from "../model/Todo";
 
-function TodoList({ id, isCompleted, todo, getTodo }) {
+function TodoList({ id, isCompleted, todo, getTodo }: Todo) {
   const [isUpdata, setIsUpdata] = useState(true);
   const [check, setCheck] = useState(isCompleted);
   const [todoValue, setTodoValue] = useState("");
   const [before, setBefore] = useState(isCompleted);
 
   const handleChange = useCallback(
-    (e) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
       setTodoValue(value);
       e.preventDefault();
@@ -32,9 +33,7 @@ function TodoList({ id, isCompleted, todo, getTodo }) {
       setTodoValue(todo);
       setBefore(check);
     } else if (!isUpdata) {
-      const isCompleted = check;
-      const todo = todoValue;
-      TodoRequset.update(setIsUpdata, id, todo, isCompleted, getTodo);
+      TodoRequset.update(setIsUpdata, id, todoValue, check, getTodo);
     }
   };
 
@@ -61,7 +60,7 @@ function TodoList({ id, isCompleted, todo, getTodo }) {
 }
 export default TodoList;
 
-const TodoListWaper = styled.li`
+const TodoListWaper = styled.li<{ check: boolean }>`
   padding: 10px;
   border-bottom: 1px #ccc dotted;
   list-style: none;

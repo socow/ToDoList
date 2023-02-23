@@ -1,7 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 
-function InputGroup({ type = "text", placeholder = "", value, setValue }) {
+function InputGroup({
+  type = "text",
+  placeholder = "",
+  value,
+  setValue,
+}: {
+  type: string;
+  placeholder: string;
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+}) {
   return (
     <>
       <AuthInput

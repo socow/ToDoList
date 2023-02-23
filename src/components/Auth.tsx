@@ -11,22 +11,22 @@ import {
 } from "../store/auth.recoil";
 
 function Login() {
-  const [email, setEmail] = useRecoilState(emailState);
-  const [password, setPassword] = useRecoilState(passwordState);
+  const [email, setEmail] = useRecoilState<string>(emailState);
+  const [password, setPassword] = useRecoilState<string>(passwordState);
   const [isLogin, setIsLogin] = useState(true);
   const useCheck = useRecoilValue(inputValueSelector);
   const loginRequest = useRecoilValue(loginPost);
   const signupRequest = useRecoilValue(signupPost);
 
-  const createAccountHandler = (e) => {
+  const createAccountHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsLogin((current) => !current);
   };
 
-  const authRequest = async (e) => {
+  const authRequest = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const api = isLogin ? loginRequest : signupRequest;
-    await api();
+    return api();
   };
 
   return (

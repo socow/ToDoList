@@ -25,7 +25,7 @@ export const loginPost = selector({
   get: ({ get }) => {
     const email = get(emailState);
     const password = get(passwordState);
-    const authSubmit = async (e) => {
+    const authSubmit = async () => {
       await AuthRequest.login(email, password);
     };
     return authSubmit;
@@ -37,7 +37,7 @@ export const signupPost = selector({
   get: ({ get }) => {
     const email = get(emailState);
     const password = get(passwordState);
-    const signupSubmit = async (e) => {
+    const signupSubmit = async () => {
       await AuthRequest.signup(email, password);
     };
     return signupSubmit;

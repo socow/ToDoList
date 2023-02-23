@@ -6,7 +6,7 @@ const URLS = {
 };
 
 export const AuthRequest = {
-  async login(email, password) {
+  async login(email: string, password: string) {
     instance
       .post(URLS.LOGIN, {
         email,
@@ -23,7 +23,7 @@ export const AuthRequest = {
       });
   },
 
-  async signup(email, password) {
+  async signup(email: string, password: string) {
     instance
       .post(URLS.SIGNUP, {
         email,
