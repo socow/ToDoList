@@ -1,9 +1,11 @@
-import React, { useCallback, useState } from "react";
+import React, { FormEvent, useCallback, useState } from "react";
 import styled from "styled-components";
 import { TodoRequset } from "../apis/todo";
 import { Todo } from "../model/Todo";
-
-function TodoList({ id, isCompleted, todo, getTodo }: Todo) {
+import { todoState } from "../store/todo.recoil";
+import { useSetRecoilState } from "recoil";
+function TodoList({ id, isCompleted, todo }: Todo) {
+  const setTodoData = useSetRecoilState(todoState);
   const [isUpdata, setIsUpdata] = useState(true);
   const [check, setCheck] = useState(isCompleted);
   const [todoValue, setTodoValue] = useState("");
@@ -20,20 +22,26 @@ function TodoList({ id, isCompleted, todo, getTodo }: Todo) {
 
   const deleteTodo = () => {
     if (isUpdata) {
-      TodoRequset.dlete(id, getTodo);
+      TodoRequset.dlete(id);
+      setTodoData((prev) => prev.filter((todo) => todo.id !== id));
     } else if (!isUpdata) {
       setIsUpdata(true);
       setCheck(before);
     }
   };
 
-  const modifyContent = () => {
+  const modifyContent = async (e: FormEvent) => {
+    e.preventDefault();
     if (isUpdata) {
       setIsUpdata(false);
       setTodoValue(todo);
       setBefore(check);
     } else if (!isUpdata) {
-      TodoRequset.update(setIsUpdata, id, todoValue, check, getTodo);
+      const res = await TodoRequset.update(id, todoValue, check);
+      setTodoData((prev) =>
+        prev.map((todo: Todo) => (todo.id === res.id ? res : todo))
+      );
+      setIsUpdata(true);
     }
   };
 

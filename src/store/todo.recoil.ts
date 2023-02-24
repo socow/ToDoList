@@ -1,5 +1,6 @@
 import { atom, selector } from "recoil";
 import { Todo } from "src/model/Todo";
+
 export const todoState = atom<Todo[]>({
   key: "todoState",
   default: [],

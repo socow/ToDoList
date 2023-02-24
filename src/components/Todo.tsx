@@ -48,13 +48,7 @@ function Todo() {
         </TodoSubmit>
       </TodoInputBox>
       {todoData?.map(({ id, isCompleted, todo }) => (
-        <TodoList
-          key={id}
-          id={id}
-          todo={todo}
-          isCompleted={isCompleted}
-          getTodo={getTodo}
-        />
+        <TodoList key={id} id={id} todo={todo} isCompleted={isCompleted} />
       ))}
     </TodoBlock>
   );

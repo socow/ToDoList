@@ -1,4 +1,4 @@
-import { atom, selector } from "recoil";
+import { atom, selector, useRecoilValue } from "recoil";
 import { AuthRequest } from "../apis/auth";
 
 export const emailState = atom({
@@ -43,3 +43,7 @@ export const signupPost = selector({
     return signupSubmit;
   },
 });
+
+export const useCheckFuc = () => {
+  return useRecoilValue(inputValueSelector);
+};

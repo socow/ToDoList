@@ -5,16 +5,16 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   emailState,
   passwordState,
-  inputValueSelector,
   loginPost,
   signupPost,
+  useCheckFuc,
 } from "../store/auth.recoil";
 
 function Login() {
   const [email, setEmail] = useRecoilState<string>(emailState);
   const [password, setPassword] = useRecoilState<string>(passwordState);
   const [isLogin, setIsLogin] = useState(true);
-  const useCheck = useRecoilValue(inputValueSelector);
+  const useCheck = useCheckFuc();
   const loginRequest = useRecoilValue(loginPost);
   const signupRequest = useRecoilValue(signupPost);
 
