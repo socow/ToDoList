@@ -173,30 +173,23 @@ export const TodoRequset = {
     }
   },
 
-  async dlete(id: number, getTodo: () => Promise<void>) {
+  async dlete(id: number) {
     try {
       const res = await instance.delete(`${TODO_URL}/${id}`);
-      if (res.status === 204) return getTodo();
+      if (res.status === 204) return res.data;
     } catch (error: any) {
       console.error(error.message);
       throw new Error();
     }
   },
 
-  async update(
-    setIsUpdata: React.Dispatch<React.SetStateAction<boolean>>,
-    id: number,
-    todo: string,
-    isCompleted: boolean,
-    getTodo: () => Promise<void>
-  ) {
-    setIsUpdata(true);
+  async update(id: number, todo: string, isCompleted: boolean) {
     try {
       const res = await instance.put(`${TODO_URL}/${id}`, {
         todo,
         isCompleted,
       });
-      if (res.status === 200) return getTodo();
+      if (res.status === 200) return res.data;
     } catch (error: any) {
       console.error(error.message);
       throw new Error();
